@@ -28,6 +28,9 @@ public class AuthService {
     public SignupResponse signup(SignupRequest signupRequest) {
 
 
+        if(signupRequest.getEmail()==null){
+            throw new InvalidRequestException("이메일 값이 존재하지 않습니다");
+        }
         if (userRepository.existsByEmail(signupRequest.getEmail())) {
             throw new InvalidRequestException("이미 존재하는 이메일입니다.");
         }

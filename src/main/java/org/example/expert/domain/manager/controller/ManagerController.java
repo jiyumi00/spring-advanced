@@ -3,6 +3,7 @@ package org.example.expert.domain.manager.controller;
 import io.jsonwebtoken.Claims;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.example.expert.config.JwtUtil;
 import org.example.expert.domain.common.annotation.Auth;
 import org.example.expert.domain.common.dto.AuthUser;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 public class ManagerController {
@@ -38,12 +40,14 @@ public class ManagerController {
 
     @DeleteMapping("/todos/{todoId}/managers/{managerId}")
     public void deleteManager(
-            @RequestHeader("Authorization") String bearerToken,
+           // @RequestHeader("Authorization") String bearerToken,
+            @Auth AuthUser authUser,
             @PathVariable long todoId,
             @PathVariable long managerId
     ) {
-        Claims claims = jwtUtil.extractClaims(bearerToken.substring(7));
-        long userId = Long.parseLong(claims.getSubject());
-        managerService.deleteManager(userId, todoId, managerId);
+       //Claims claims = jwtUtil.extractClaims(bearerToken.substring(7));
+       // long userId = Long.parseLong(claims.getSubject());
+        log.info("AuthUser = {}",authUser.getUserRole());
+        managerService.deleteManager(authUser, todoId, managerId);
     }
 }

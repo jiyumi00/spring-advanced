@@ -1,6 +1,7 @@
 package org.example.expert.domain.manager.service;
 
 import lombok.RequiredArgsConstructor;
+import org.example.expert.domain.common.annotation.Auth;
 import org.example.expert.domain.common.dto.AuthUser;
 import org.example.expert.domain.common.exception.InvalidRequestException;
 import org.example.expert.domain.manager.dto.request.ManagerSaveRequest;
@@ -74,8 +75,8 @@ public class ManagerService {
     }
 
     @Transactional
-    public void deleteManager(long userId, long todoId, long managerId) {
-        User user = userRepository.findById(userId)
+    public void deleteManager(@Auth AuthUser authUser, long todoId, long managerId) {
+        User user = userRepository.findById(authUser.getId())
                 .orElseThrow(() -> new InvalidRequestException("User not found"));
 
         Todo todo = todoRepository.findById(todoId)

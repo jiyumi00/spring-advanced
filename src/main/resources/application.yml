@@ -1,0 +1,17 @@
+
+spring:
+  application:
+    name: spring-advanced
+  datasource:
+    url: jdbc:mysql://localhost:3306/advanced
+    username: root
+    password: yoon7200*
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+        use_sql_comments: true

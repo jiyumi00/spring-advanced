@@ -26,6 +26,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
+
 @ExtendWith(MockitoExtension.class)
 class ManagerServiceTest {
 
@@ -47,6 +48,7 @@ class ManagerServiceTest {
         // when & then
         InvalidRequestException exception = assertThrows(InvalidRequestException.class, () -> managerService.getManagers(todoId));
         assertEquals("Manager not found", exception.getMessage());
+        System.out.println("exception"+exception.getMessage());
     }
 
     @Test
