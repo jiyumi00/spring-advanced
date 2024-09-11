@@ -62,4 +62,16 @@ public class CommentService {
         }
         return dtoList;
     }
+
+    @Transactional
+    public void deleteComments(long todoId){
+        Todo todo = todoRepository.findById(todoId).orElseThrow(() ->
+                new InvalidRequestException("Todo not found"));
+
+        commentRepository.deleteAll(todo.getComments());
+    }
+
+    public void showThrow(){
+        throw new RuntimeException("강제 오류 발생");
+    }
 }

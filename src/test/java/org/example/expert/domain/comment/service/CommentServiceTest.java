@@ -11,18 +11,21 @@ import org.example.expert.domain.todo.entity.Todo;
 import org.example.expert.domain.todo.repository.TodoRepository;
 import org.example.expert.domain.user.entity.User;
 import org.example.expert.domain.user.enums.UserRole;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willDoNothing;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class CommentServiceTest {
@@ -32,6 +35,7 @@ class CommentServiceTest {
     @Mock
     private TodoRepository todoRepository;
     @InjectMocks
+    @Spy
     private CommentService commentService;
 
     @Test
@@ -71,4 +75,19 @@ class CommentServiceTest {
         // then
         assertNotNull(result);
     }
+
+    @Test
+    public void 댓글_삭제() {
+        //given
+        long todoId = 1L;
+
+        given(todoRepository.findById(anyLong())).willReturn(Optional.of(new Todo()));
+        doNothing().when(commentRepository).deleteAll(anyList());
+        //when
+        commentService.deleteComments(todoId);
+        //than
+        verify(commentRepository,times(1)).deleteAll(anyList());
+    }
+
+
 }
