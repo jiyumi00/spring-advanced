@@ -51,12 +51,11 @@ class CommentAdminControllerTest {
 
         //when
         ResultActions resultActions=mockMvc.perform(delete("/admin/comments/{commentId}",commentId)
-                .requestAttr("userId",userId));
+                 .requestAttr("userId",userId));
 
         resultActions.andExpect(status().isOk());
 
         //then
-        //Assertions.assertThat(output.getOut()).contains("요청한 사용자의 ID={}, API 요청 시각 = {}, API 요청 URL= {}");
         Mockito.verify(commentAdminService,Mockito.times(1)).deleteComment(commentId);
     }
 
