@@ -17,12 +17,21 @@ import org.junit.jupiter.params.shadow.com.univocity.parsers.annotations.Nested;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.util.ReflectionTestUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class TodoServiceTest {
@@ -64,7 +73,45 @@ class TodoServiceTest {
     }
 
     @org.junit.jupiter.api.Nested
+    class GetTodosTest{
+        @Test
+        public void 일정_조회_정상동작(){
+            //given
+            int page=2;
+            int size=7;
+            Pageable pageable=PageRequest.of(page-1,size);
+
+            User user = new User("email", "pwd", UserRole.USER);
+            ReflectionTestUtils.setField(user, "id", 2L);
+
+            Todo todo1 = new Todo("어제 기분", "너무 행복해", "맑음", user);
+            ReflectionTestUtils.setField(todo1, "id", 1L);
+
+            Todo todo2 = new Todo("오늘 기분", "너무 즐거워", "흐림", user);
+            ReflectionTestUtils.setField(todo2, "id", 2L);
+
+            List<Todo> todoList=new ArrayList<>();
+            todoList.add(todo1);
+            todoList.add(todo2);
+
+            Page<Todo> todoPage=new PageImpl<>(todoList,pageable,todoList.size());
+
+            given(todoRepository.findAllByOrderByModifiedAtDesc(pageable)).willReturn(todoPage);
+
+            //when
+            Page<TodoResponse> todos= todoService.getTodos(page,size);
+
+            //than
+            Assertions.assertNotNull(todos);
+            Assertions.assertEquals("오늘 기분",todos.getContent().get(1).getTitle());
+
+            verify(todoRepository,times(1)).findAllByOrderByModifiedAtDesc(pageable);
+        }
+    }
+
+    @org.junit.jupiter.api.Nested
     class GetTodoTest{
+
         @Test
         public void 일정_단건_조회_정상동작() {
             //given
